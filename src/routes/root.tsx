@@ -1,54 +1,30 @@
-import { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-type User = {
-  email: string;
-};
+type Props = {};
 
-export default function Root() {
-  const [user, setUser] = useState<User | null>(null);
+const root = (props: Props) => {
+  const { loginWithRedirect, user, isLoading } = useAuth0();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:1337/auth/me/")
-      .then((res) => res.json())
-      .then((data) => {
-        setUser(data);
-      });
-  }, []);
-
-  console.log(user);
+    if (user && !isLoading) {
+      navigate("/dashboard");
+    }
+  }, [user, isLoading]);
 
   return (
-    <>
-      <div id="sidebar">
-        <h1>React Router Contacts</h1>
-        <div>
-          <form id="search-form" role="search">
-            <input
-              id="q"
-              aria-label="Search contacts"
-              placeholder="Search"
-              type="search"
-              name="q"
-            />
-            <div id="search-spinner" aria-hidden hidden={true} />
-            <div className="sr-only" aria-live="polite"></div>
-          </form>
-          <form method="post">
-            <button type="submit">New</button>
-          </form>
-        </div>
-        <nav>
-          <ul>
-            <li>
-              <a href={`/contacts/1`}>Your Name</a>
-            </li>
-            <li>
-              <a href={`/contacts/2`}>Your Friend</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div id="detail"></div>
-    </>
+    <div>
+      <p>
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aliquam
+        eveniet quam eos libero delectus, autem laborum ipsam obcaecati, eum
+        repudiandae corporis expedita iusto doloribus dolores. Dolores
+        cupiditate molestiae aperiam ad.
+      </p>
+      <button onClick={() => loginWithRedirect()}>Login</button>
+    </div>
   );
-}
+};
+
+export default root;
